@@ -38,21 +38,28 @@ import kotlin.math.min
 /**
  * The Solution:
  *
+ *
  * The idea here is we use the Preview feature of Compose and the graphic
  * rendering system to provide us a visual test harness... a bit goofy,
  * but the visual feedback is very fast as you iterate through implementing
- * the 'column' target function.
+ * the 'columnar' target function... the alternative testing approach would be to manually
+ * calculate the 'expected' returned child origins. These expected value calculations
+ * would be time consuming.. Especially for large numbers of columns... so for an interview
+ * situation, may Preview test functions is useful choice.
  *
  * To solve this, I just started with the default 'Compose' sample project in Android Studio
- * and created this DavesRectangle file with Composables in it...
+ * and created this 'DavesRectangles' file with Composables in it...
  *
  * The initial pass at this took me 25 minute to write the test harness, then about 35
- * to implement fully with only one or two Preview tests written .. so 5 minutes over.. I'M FIRED! :-)
+ * to implement fully with only one or two Preview tests written .. and there was only
+ * one minor bug.  For an interview candidate who does NOT write any tests, they will
+ * probably not produce a bug-free solution within an hour. They should be warned of this
+ * ahead of time in order to prevent super-stressing out the candidate.
  *
- * My initial pass, which took a little of an hour, is the 'initial commit' to this repo.  It has
- * one big bug which is it didn't check to see if a child was too high (only check for too wide)..
+ * My initial pass, which took a little over an hour, is the 'initial commit' to this repo.  It has
+ * one bug which is it didn't check to see if a child was too high (only check for too wide)..
  * also the rendered was trying to render all children even if it had a smaller set of points
- * returned by columnar... and also I made cosmetic changes in subsequent commits..
+ * returned by columnar... subsequent commits just cleaned things up.
  */
 
 class Rectangle(val width: Int, val height: Int)
@@ -198,15 +205,20 @@ fun columnar(parent: Rectangle, children: List<Rectangle>): List<Offset> {
     var availableHeight = parent.height
 
     children.forEach { child ->
+        // quick short-circuit logic...
         // as soon as we encounter a child that can no longer fit, we return what we have
         if (child.width > availableWidth) return offsets
         if (child.height > availableHeight) return offsets
+
+        // Now we see how current child fits into current column...
 
         // column is as wide as widest child
         if (child.width > currentColumnWidth) currentColumnWidth = child.width
 
         if (child.height + currentColumnHeight > availableHeight) {
-            // new column!
+            // child cannot fit in current column!
+            // so stick it in next.. short circuit logic above assures that this
+            // child can fit in next column
             columnIndex += 1
             columnWidths.add(currentColumnWidth)
             currentColumnWidth = 0
