@@ -49,8 +49,10 @@ import kotlin.math.min
  * The initial pass at this took me 25 minute to write the test harness, then about 35
  * to implement fully with only one or two Preview tests written .. so 5 minutes over.. I'M FIRED! :-)
  *
- * My initial pass which took a little of an hour is the 'initial commit' to this repo.. Subsequent
- * commits were cleanup as cosmetic improvements.
+ * My initial pass, which took a little of an hour, is the 'initial commit' to this repo.  It has
+ * one big bug which is it didn't check to see if a child was too high (only check for too wide)..
+ * also the rendered was trying to render all children even if it had a smaller set of points
+ * returned by columnar... and also I made cosmetic changes in subsequent commits..
  */
 
 class Rectangle(val width: Int, val height: Int)
@@ -64,6 +66,45 @@ fun SingleChild() {
     val children = listOf(
         Rectangle(100, 100),
     )
+    RectangleOfRectangles(parent, children)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StrangeParent() {
+
+    // input: parent rectangle and a list of small rectangles...
+    val parent = Rectangle(200, 500)
+    val children = listOf(
+        Rectangle(100, 100),
+        Rectangle(100, 100),
+        Rectangle(100, 100),
+        Rectangle(100, 100),
+        Rectangle(100, 50),
+        Rectangle(100, 50),
+        Rectangle(100, 20),
+        Rectangle(100, 20),
+    )
+
+    RectangleOfRectangles(parent, children)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NormalChildren() {
+
+    // input: parent rectangle and a list of small rectangles...
+    val parent = Rectangle(500, 500)
+    val children = listOf(
+        Rectangle(100, 100),
+        Rectangle(300, 100),
+        Rectangle(100, 100),
+        Rectangle(100, 100),
+        Rectangle(100, 50),
+        Rectangle(100, 100),
+        Rectangle(100, 50),
+    )
+
     RectangleOfRectangles(parent, children)
 }
 
@@ -159,7 +200,7 @@ fun columnar(parent: Rectangle, children: List<Rectangle>): List<Offset> {
     children.forEach { child ->
         // as soon as we encounter a child that can no longer fit, we return what we have
         if (child.width > availableWidth) return offsets
-        if (child.height > availableWidth) return offsets
+        if (child.height > availableHeight) return offsets
 
         // column is as wide as widest child
         if (child.width > currentColumnWidth) currentColumnWidth = child.width
