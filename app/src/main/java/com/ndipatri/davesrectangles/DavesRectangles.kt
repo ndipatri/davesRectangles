@@ -39,20 +39,24 @@ import kotlin.math.min
  * The Solution:
  *
  *
- * The idea here is we use the Preview feature of Compose and the graphic
+ * My solution is to use the Preview feature of Compose and the graphic
  * rendering system to provide us a visual test harness... a bit goofy,
  * but the visual feedback is very fast as you iterate through implementing
  * the 'columnar' target function... the alternative testing approach would be to manually
  * calculate the 'expected' returned child origins. These expected value calculations
  * would be time consuming.. Especially for large numbers of columns... so for an interview
- * situation, may Preview test functions is useful choice.
+ * situation, my Preview test functions is useful choice.
  *
  * To solve this, I just started with the default 'Compose' sample project in Android Studio
  * and created this 'DavesRectangles' file with Composables in it...
  *
- * The initial pass at this took me 25 minute to write the test harness, then about 35
+ * My 'mock interview' took me 25 minute to write the test harness, then about 35
  * to implement fully with only one or two Preview tests written .. and there was only
- * one minor bug.  For an interview candidate who does NOT write any tests, they will
+ * one minor bug.
+ *
+ * During my interview, I disabled CoPilot and Gemini and I did Google 'Compose Canvas draw rectangle' to remember the 'drawRect' function.
+ *
+ * For an interview candidate who does NOT write any tests, they will
  * probably not produce a bug-free solution within an hour. They should be warned of this
  * ahead of time in order to prevent super-stressing out the candidate.
  *
