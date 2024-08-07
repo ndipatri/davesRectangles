@@ -43,8 +43,14 @@ import kotlin.math.min
  * but the visual feedback is very fast as you iterate through implementing
  * the 'column' target function.
  *
+ * To solve this, I just started with the default 'Compose' sample project in Android Studio
+ * and created this DavesRectangle file with Composables in it...
+ *
  * The initial pass at this took me 25 minute to write the test harness, then about 35
  * to implement fully with only one or two Preview tests written .. so 5 minutes over.. I'M FIRED! :-)
+ *
+ * My initial pass which took a little of an hour is the 'initial commit' to this repo.. Subsequent
+ * commits were cleanup as cosmetic improvements.
  */
 
 class Rectangle(val width: Int, val height: Int)
