@@ -17,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import com.ndipatri.davesrectangles.ui.theme.DavesRectanglesTheme
+import kotlin.math.max
+import kotlin.math.min
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,8 +73,8 @@ fun RectangleWithChildren() {
         RectangleOfRectangles(
             parent = Rectangle2D(parent.width, parent.height, Offset(0F,0F)),
             children = children.mapIndexed { index, child ->
-                Rectangle2D(child.width, child.height, offsets[index])
-            }
+                Rectangle2D(child.width, child.height, offsets[min(index, offsets.size-1)])
+            }.subList(0, offsets.size)
         )
     }
 }
@@ -95,6 +97,7 @@ fun columnar(parent: Rectangle, children: List<Rectangle>): List<Offset> {
     children.forEach { child ->
         // as soon as we encounter a child that can no longer fit, we return what we have
         if (child.width > availableWidth) return offsets
+        if (child.height > availableWidth) return offsets
 
         // column is as wide as widest child
         if (child.width > currentColumnWidth) currentColumnWidth = child.width
