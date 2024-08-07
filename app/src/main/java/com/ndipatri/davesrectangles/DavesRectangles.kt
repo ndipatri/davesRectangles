@@ -294,8 +294,6 @@ private fun RectangleOfRectanglesContent(parent: Rectangle2D, children: List<Rec
     }
 }
 
-// Draw Rectangle Googled from here:
-// https://nameisjayant.medium.com/draw-rectangle-with-canvas-in-jetpack-compose-539d1890ddd2
 @Composable
 private fun RectangleContent(rectangle: Rectangle2D, color: Color = Color.Blue) {
     Card(modifier = Modifier
