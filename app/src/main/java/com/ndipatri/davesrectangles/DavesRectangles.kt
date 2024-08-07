@@ -1,9 +1,14 @@
 package com.ndipatri.davesrectangles
 
 import android.content.res.Resources
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -293,16 +298,12 @@ private fun RectangleOfRectanglesContent(parent: Rectangle2D, children: List<Rec
 // https://nameisjayant.medium.com/draw-rectangle-with-canvas-in-jetpack-compose-539d1890ddd2
 @Composable
 private fun RectangleContent(rectangle: Rectangle2D, color: Color = Color.Blue) {
-    Canvas(
-        modifier = Modifier
-            .width(rectangle.width.dp / Resources.getSystem().displayMetrics.density)
-            .height(rectangle.height.dp / Resources.getSystem().displayMetrics.density)
-    ) {
-        drawRect(
-            style = Stroke(width = 10f),
-            color = color,
-            size = Size(rectangle.width.toFloat(), rectangle.height.toFloat()),
-            topLeft = rectangle.origin
+    Card(modifier = Modifier
+        .width(rectangle.width.dp / Resources.getSystem().displayMetrics.density)
+        .height(rectangle.height.dp / Resources.getSystem().displayMetrics.density)
+        .absoluteOffset(
+            rectangle.origin.x.dp / Resources.getSystem().displayMetrics.density,
+            rectangle.origin.y.dp / Resources.getSystem().displayMetrics.density
         )
-    }
+        .border(BorderStroke(4.dp, color))) {}
 }
