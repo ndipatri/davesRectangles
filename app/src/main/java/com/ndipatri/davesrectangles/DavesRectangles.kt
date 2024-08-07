@@ -43,7 +43,7 @@ import kotlin.math.min
  * but the visual feedback is very fast as you iterate through implementing
  * the 'column' target function.
  *
- * The initial pass at this took me 20 minute to write the test harness, then about 45
+ * The initial pass at this took me 25 minute to write the test harness, then about 35
  * to implement fully with only one or two Preview tests written .. so 5 minutes over.. I'M FIRED! :-)
  */
 
@@ -124,7 +124,6 @@ private fun RectangleOfRectangles(
     parent: Rectangle,
     children: List<Rectangle>
 ) {
-    // This is where we do our work (took 35 minute to get here)
     val offsets = columnar(parent, children)
 
     // now we test ...
@@ -197,7 +196,6 @@ private fun RectangleOfRectanglesContent(parent: Rectangle2D, children: List<Rec
 
 // Draw Rectangle Googled from here:
 // https://nameisjayant.medium.com/draw-rectangle-with-canvas-in-jetpack-compose-539d1890ddd2
-// this took about 20 minutes
 @Composable
 private fun RectangleContent(rectangle: Rectangle2D, color: Color = Color.Blue) {
     Canvas(
