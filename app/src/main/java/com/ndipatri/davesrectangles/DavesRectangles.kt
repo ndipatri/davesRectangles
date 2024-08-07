@@ -70,6 +70,38 @@ class Rectangle(val width: Int, val height: Int)
 
 @Preview(showBackground = true)
 @Composable
+fun SameWidthParentAndChildren() {
+
+    // input: parent rectangle and a list of small rectangles...
+    val parent = Rectangle(500, 500)
+    val children = listOf(
+        Rectangle(500, 100),
+        Rectangle(500, 100),
+        Rectangle(500, 100),
+        Rectangle(500, 100),
+        Rectangle(500, 100),
+    )
+    RectangleOfRectangles(parent, children)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SameHeightParentAndChildren() {
+
+    // input: parent rectangle and a list of small rectangles...
+    val parent = Rectangle(500, 500)
+    val children = listOf(
+        Rectangle(100, 500),
+        Rectangle(100, 500),
+        Rectangle(100, 500),
+        Rectangle(100, 500),
+        Rectangle(100, 500),
+    )
+    RectangleOfRectangles(parent, children)
+}
+
+@Preview(showBackground = true)
+@Composable
 fun SingleChild() {
 
     // input: parent rectangle and a list of small rectangles...
