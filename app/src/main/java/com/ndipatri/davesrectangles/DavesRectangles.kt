@@ -303,5 +303,5 @@ private fun RectangleContent(rectangle: Rectangle2D, color: Color = Color.Blue) 
             rectangle.origin.x.dp / Resources.getSystem().displayMetrics.density,
             rectangle.origin.y.dp / Resources.getSystem().displayMetrics.density
         )
-        .border(BorderStroke(4.dp, color))) {}
+        .border(BorderStroke(1.dp, color))) {}
 }
