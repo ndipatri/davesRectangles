@@ -7,8 +7,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -16,6 +18,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import kotlin.math.min
 
@@ -101,6 +104,40 @@ fun SameHeightParentAndChildren() {
         Rectangle(100, 500),
         Rectangle(100, 500),
         Rectangle(100, 500),
+    )
+    RectangleOfRectangles(parent, children)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ManyColumnsManyRows() {
+
+    // input: parent rectangle and a list of small rectangles...
+    val parent = Rectangle(500, 500)
+    val children = listOf(
+        Rectangle(20, 50),
+        Rectangle(50, 20),
+        Rectangle(10, 30),
+        Rectangle(20, 100),
+        Rectangle(200, 500),
+        Rectangle(100, 500),
+    )
+    RectangleOfRectangles(parent, children)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ManyColumnsManyRows2() {
+
+    // input: parent rectangle and a list of small rectangles...
+    val parent = Rectangle(400, 400)
+    val children = listOf(
+        Rectangle(20, 50),
+        Rectangle(50, 20),
+        Rectangle(10, 30),
+        Rectangle(20, 100),
+        Rectangle(200, 100),
+        Rectangle(100, 350),
     )
     RectangleOfRectangles(parent, children)
 }
@@ -239,32 +276,41 @@ fun columnar(parent: Rectangle, children: List<Rectangle>): List<Offset> {
     var columnIndex = 0
     var columnWidths = mutableListOf<Int>(0)
 
+    // need this to keep track of WHEN we start next column
     var currentColumnHeight = 0
+
+    // need this to keep track of WHERE we start next column
     var currentColumnWidth = 0
 
-    var availableWidth = parent.width
-    var availableHeight = parent.height
+    // available height never changes
+    val availableHeight = parent.height
 
     children.forEach { child ->
-        // quick short-circuit logic...
-        // as soon as we encounter a child that can no longer fit, we return what we have
-        if (child.width > availableWidth) return offsets
-        if (child.height > availableHeight) return offsets
+        // changes as we will columns
+        val availableWidth = parent.width - columnWidths.sum()
 
-        // Now we see how current child fits into current column...
-
-        // column is as wide as widest child
-        if (child.width > currentColumnWidth) currentColumnWidth = child.width
-
+        // first we see if view can fit in current column
+        if (child.width > availableWidth) {
+            return offsets
+        }
         if (child.height + currentColumnHeight > availableHeight) {
             // child cannot fit in current column!
-            // so stick it in next.. short circuit logic above assures that this
-            // child can fit in next column
+
+            // can it fix it a new column?
+            if (child.height > availableHeight &&
+                child.width > availableWidth + currentColumnWidth) {
+                return offsets
+            }
+
+            // advance to new column
             columnIndex += 1
             columnWidths.add(currentColumnWidth)
             currentColumnWidth = 0
             currentColumnHeight = 0
         }
+
+        // column is wider than widest child
+        if (child.width > currentColumnWidth) currentColumnWidth = child.width
 
         // child can fit in current column...
 
