@@ -2,23 +2,17 @@ package com.ndipatri.davesrectangles
 
 import android.content.res.Resources
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import kotlin.math.min
 
@@ -136,6 +130,23 @@ fun ManyColumnsManyRows2() {
         Rectangle(20, 100),
         Rectangle(200, 100),
         Rectangle(100, 350),
+    )
+    RectangleOfRectangles(parent, children)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ManyColumnsManyRows3() {
+
+    // input: parent rectangle and a list of small rectangles...
+    val parent = Rectangle(400, 400)
+    val children = listOf(
+        Rectangle(20, 50),
+        Rectangle(50, 20),
+        Rectangle(10, 30),
+        Rectangle(20, 100),
+        Rectangle(200, 100),
+        Rectangle(200, 350),
     )
     RectangleOfRectangles(parent, children)
 }
@@ -262,17 +273,21 @@ private fun RectangleOfRectangles(
         children = children.subList(0, offsets.size).mapIndexed { index, child ->
             Rectangle2D(child.width, child.height, offsets[min(index, offsets.size - 1)])
         }
-    )
+    ) {
+        Text(children.map { child -> "${child.width} x ${child.height}\n" }.toString())
+    }
 }
 
 // Idea is to layout children within the parent rectangle....
-// this took about 45 minutes....
 fun columnar(parent: Rectangle, children: List<Rectangle>): List<Offset> {
 
+    // The list of offsets we are returning
     var offsets = mutableListOf<Offset>()
 
     var columnIndex = 0
-    var columnWidths = mutableListOf<Int>(0)
+
+    // we need to track how much width we've consumed so far
+    var columnWidths = mutableListOf(0)
 
     // need this to keep track of WHEN we start next column
     var currentColumnHeight = 0
@@ -280,26 +295,24 @@ fun columnar(parent: Rectangle, children: List<Rectangle>): List<Offset> {
     // need this to keep track of WHERE we start next column
     var currentColumnWidth = 0
 
-    // available height never changes
-    val availableHeight = parent.height
-
     children.forEach { child ->
-        // changes as we will columns
+        // changes as we build columns
         val availableWidth = parent.width - columnWidths.sum()
 
         // first we see if view can fit in current column
         if (child.width > availableWidth) {
             return offsets
         }
-        if (child.height + currentColumnHeight > availableHeight) {
+        if (child.height + currentColumnHeight > parent.height) {
             // child cannot fit in current column!
 
             // can it fix it a new column?
-            if (child.height > availableHeight &&
-                child.width > availableWidth + currentColumnWidth) {
+            if (child.height > parent.height ||
+                child.width > availableWidth - currentColumnWidth) {
                 return offsets
             }
 
+            // child can fit in a new column, so
             // advance to new column
             columnIndex += 1
             columnWidths.add(currentColumnWidth)
@@ -309,8 +322,6 @@ fun columnar(parent: Rectangle, children: List<Rectangle>): List<Offset> {
 
         // column is wider than widest child
         if (child.width > currentColumnWidth) currentColumnWidth = child.width
-
-        // child can fit in current column...
 
         // Now that current column width and column height are updated
         // we can place child.
@@ -331,11 +342,12 @@ fun columnar(parent: Rectangle, children: List<Rectangle>): List<Offset> {
 class Rectangle2D(val width: Int, val height: Int, val origin: Offset)
 
 @Composable
-private fun RectangleOfRectanglesContent(parent: Rectangle2D, children: List<Rectangle2D>) {
+private fun RectangleOfRectanglesContent(parent: Rectangle2D, children: List<Rectangle2D>, content: @Composable () -> Unit) {
     RectangleContent(parent)
     children.forEach { child ->
         RectangleContent(child, Color.Red)
     }
+    content.invoke()
 }
 
 @Composable
