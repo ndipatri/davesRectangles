@@ -68,10 +68,8 @@ import kotlin.math.min
  * probably not produce a bug-free solution within an hour. They should be warned of this
  * ahead of time in order to prevent super-stressing out the candidate.
  *
- * My initial pass, which took a little over an hour, is the 'initial commit' to this repo.  It has
- * one bug which is it didn't check to see if a child was too high (only check for too wide)..
- * also the rendered was trying to render all children even if it had a smaller set of points
- * returned by columnar... subsequent commits just cleaned things up.
+ * My initial pass, which took a little over an hour, has a few minor bugs. Subsequent commits added
+ * tests and fixed more bugs (these two activities were correlated :-)
  */
 
 class Rectangle(val width: Int, val height: Int)
